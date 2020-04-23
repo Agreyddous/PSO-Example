@@ -8,8 +8,8 @@ namespace PSO
 	{
 		static void Main(string[] args)
 		{
-			int swarmSize = 10000;
-			int lifetime = 100000;
+			int swarmSize = 10;
+			int lifetime = 1000;
 			int dimentions = 10;
 			double minimumValue = -10000.0;
 			double maximumValue = 10000.0;
@@ -33,6 +33,7 @@ namespace PSO
 					particle.Position[7] * particle.Position[7] +
 					particle.Position[8] * particle.Position[8] +
 					particle.Position[9] * particle.Position[9],
+						(fitness, bestFitness) => fitness < bestFitness,
 						swarmSize,
 						dimentions,
 						optimalFitnessRange,

@@ -5,6 +5,7 @@ namespace PSO.Entities
 	public class Particle
 	{
 		public Particle(Func<Particle, double> fitnessFunction,
+				  Func<double, double, bool> compareFitnessFunction,
 				  int dimentions,
 				  double maximumValue,
 				  double minimumValue,
@@ -12,6 +13,7 @@ namespace PSO.Entities
 		{
 			Random random = new Random();
 
+			CompareFitnessFunction = compareFitnessFunction;
 			FitnessFunction = fitnessFunction;
 			Weight = weight;
 
@@ -31,6 +33,7 @@ namespace PSO.Entities
 			_updateFitness();
 		}
 
+		public Func<double, double, bool> CompareFitnessFunction { get; private set; }
 		public Func<Particle, double> FitnessFunction { get; private set; }
 		public double[] Position { get; private set; }
 		public double[] Velocity { get; private set; }
@@ -87,7 +90,7 @@ namespace PSO.Entities
 		{
 			Fitness = FitnessFunction(this);
 
-			bool updateBest = Fitness < BestFitness;
+			bool updateBest = CompareFitnessFunction(Fitness, BestFitness);
 
 			if (updateBest)
 			{

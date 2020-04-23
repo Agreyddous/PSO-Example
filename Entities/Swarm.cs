@@ -9,6 +9,7 @@ namespace PSO.Entities
 		private List<Particle> _particles;
 
 		public Swarm(Func<Particle, double> fitnessFunction,
+			   Func<double, double, bool> compareFitnessFunction,
 			   int size,
 			   int dimentions,
 			   double[] optimalFitnessRange,
@@ -21,6 +22,7 @@ namespace PSO.Entities
 		{
 			_particles = new List<Particle>(size);
 
+			CompareFitnessFunction = compareFitnessFunction;
 			OptimalFitnessRange = optimalFitnessRange;
 			MaximumValue = maximumValue;
 			MinimumValue = minimumValue;
@@ -34,6 +36,7 @@ namespace PSO.Entities
 			for (int index = 0; index < size; index++)
 			{
 				_particles.Add(new Particle(fitnessFunction,
+								compareFitnessFunction,
 								dimentions,
 								MaximumValue,
 								MinimumValue,
@@ -47,6 +50,7 @@ namespace PSO.Entities
 			}
 		}
 
+		public Func<double, double, bool> CompareFitnessFunction { get; private set; }
 		public double[] OptimalFitnessRange { get; private set; }
 		public double BestFitness { get; private set; }
 		public double[] BestPosition { get; private set; }
@@ -71,7 +75,7 @@ namespace PSO.Entities
 
 		public void UpdateBest(double[] position, double fitness)
 		{
-			if (fitness < BestFitness)
+			if (CompareFitnessFunction(fitness, BestFitness))
 			{
 				position.CopyTo(BestPosition, 0);
 				BestFitness = fitness;
